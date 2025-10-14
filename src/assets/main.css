@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+/* Your tailwindconfig file */
+@config "../../tailwind.config.js"
 
 @layer utilities {
   .bg-image {
