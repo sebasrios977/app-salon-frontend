@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import AuthAPI from "@/api/AuthAPI";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,7 +14,14 @@ const router = createRouter({
       path: "/reservaciones",
       name: "appointments",
       component: () => import("../views/appointments/AppointmentsLayout.vue"),
+      meta: { requiresAuth: true },
       children: [
+        {
+          path: "",
+          name: "my-appointments",
+          component: () =>
+            import("../views/appointments/MyAppointmentsView.vue"),
+        },
         {
           path: "nueva",
           component: () =>
@@ -27,35 +35,50 @@ const router = createRouter({
             {
               path: "detalles",
               name: "appointment-details",
-              component: () => import("../views/appointments/AppointmentView.vue"),
+              component: () =>
+                import("../views/appointments/AppointmentView.vue"),
             },
           ],
         },
       ],
     },
     {
-      path: '/auth',
-      name: 'auth',
-      component: () => import('../views/auth/AuthLayout.vue'),
+      path: "/auth",
+      name: "auth",
+      component: () => import("../views/auth/AuthLayout.vue"),
       children: [
         {
-          path: 'registro',
-          name: 'register',
-          component: () => import('../views/auth/RegisterView.vue')
+          path: "registro",
+          name: "register",
+          component: () => import("../views/auth/RegisterView.vue"),
         },
         {
-          path: 'login',
-          name: 'login',
-          component: () => import('../views/auth/LoginView.vue')
+          path: "login",
+          name: "login",
+          component: () => import("../views/auth/LoginView.vue"),
         },
         {
-          path: 'confirmar-cuenta/:token',
-          name: 'confirm-account',
-          component: () => import('../views/auth/ConfirmAccountView.vue')
+          path: "confirmar-cuenta/:token",
+          name: "confirm-account",
+          component: () => import("../views/auth/ConfirmAccountView.vue"),
         },
-      ]
+      ],
     },
   ],
+});
+
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  if (requiresAuth) {
+    try {
+      await AuthAPI.auth();
+      next();
+    } catch (error) {
+      next({ name: "login" });
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;
