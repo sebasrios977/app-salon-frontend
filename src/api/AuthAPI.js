@@ -11,10 +11,6 @@ export default {
     return api.post("/auth/login", data);
   },
   auth() {
-    return api.get("/auth/user", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    return api.get("/auth/user");
   },
 };
