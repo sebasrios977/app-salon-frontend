@@ -7,6 +7,12 @@ export function convertToISO(strDate) {
     return formatISO(newDate);
 }
 
+export function convertToDDMMYYYY(isoDate) {
+    const newDate = parseISO(isoDate);
+    const formattedDate = format(newDate, "dd/MM/yyyy");
+    return formattedDate;
+}
+
 export function displayDate(isoDate) {
     const newDate = parseISO(isoDate);
     const formattedDate = format(newDate, "PPPP", { locale: es });

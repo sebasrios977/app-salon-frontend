@@ -91,7 +91,7 @@ const disableDate = (date) => {
             : 'hover:bg-blue-600 cursor-pointer'
         "
         :disabled="!appointments.isValidReservation"
-        @click="appointments.createAppointment"
+        @click="appointments.saveAppointment"
       >
         Confirmar Reservación
       </button>
