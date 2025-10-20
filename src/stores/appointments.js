@@ -129,6 +129,20 @@ export const useAppointmentsStore = defineStore("appointments", () => {
     router.push({ name: "my-appointments" });
   }
 
+  async function deleteAppointment(appointmentId) {
+    if (confirm("¿Estás seguro de eliminar la cita?") === false) return;
+
+    try {
+      const { data } = await AppointmentAPI.delete(appointmentId);
+      toast.success(data.msg);
+      user.userAppointments = user.userAppointments.filter(
+        (appointment) => appointment._id !== appointmentId
+      );
+    } catch (error) {
+      toast.error("Error al eliminar la cita");
+    }
+  }
+
   function clearAppointmentData() {
     services.value = [];
     date.value = "";
@@ -143,6 +157,7 @@ export const useAppointmentsStore = defineStore("appointments", () => {
     isSomeServiceSelected,
     setSelectedAppointment,
     onServiceSelect,
+    deleteAppointment,
     clearAppointmentData,
     date,
     hours,
